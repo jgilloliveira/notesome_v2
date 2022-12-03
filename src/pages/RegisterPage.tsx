@@ -14,7 +14,7 @@ import {
 import { useState } from "react"
 import { Navigate, useNavigate } from "react-router"
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [password, setPassword] = useState("")
   const navigate = useNavigate()
