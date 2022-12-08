@@ -1,6 +1,5 @@
 import { Visibility, VisibilityOff } from "@mui/icons-material"
 import {
-  Box,
   Paper,
   Container,
   TextField,
@@ -12,12 +11,30 @@ import {
   Link,
 } from "@mui/material"
 import { useState } from "react"
-import { Navigate, useNavigate } from "react-router"
+import { useNavigate } from "react-router-dom"
+import PasswordField from "../components/base/PasswordField"
+import { useLogin } from "../connections/session.connection"
 
 export default function LoginPage() {
-  const [showPassword, setShowPassword] = useState(false)
   const [password, setPassword] = useState("")
+  const [username, setUsername] = useState("")
+
   const navigate = useNavigate()
+  const { isSenddingLogin, loginData, loginError, sentLogin } = useLogin()
+
+  function handleLogin() {
+    sentLogin(
+      {
+        username,
+        password,
+      },
+      {
+        onSuccess(data, variables, context) {
+          console.log(data)
+        },
+      }
+    )
+  }
 
   return (
     <Container fixed>
@@ -30,39 +47,31 @@ export default function LoginPage() {
       >
         <Stack spacing={6}>
           <Typography variant="h4">Login</Typography>
-          <TextField label="Nombre de Usuario" variant="standard" autoFocus />
           <TextField
-            label="Contraseña"
+            label="Nombre de usuario"
             variant="standard"
-            type={showPassword ? "text" : "password"}
+            autoFocus
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <PasswordField
+            label="Contraseña"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={() => {
-                      setShowPassword(!showPassword)
-                    }}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
           />
           <Button
             sx={{ width: "100px", alignSelf: "center" }}
             variant="contained"
+            onClick={handleLogin}
           >
             Login
           </Button>
-          <Link underline="none" onClick={() => navigate("")}>
+          <Typography variant="caption">
+            ¿Todavía no tienes una cuenta?
+          </Typography>
+          <Link underline="none" onClick={() => navigate("/register")}>
             Registrarse
           </Link>
-          <Typography variant="subtitle1">Registrarse</Typography>
         </Stack>
       </Paper>
     </Container>

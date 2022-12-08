@@ -12,7 +12,8 @@ import {
   Link,
 } from "@mui/material"
 import { useState } from "react"
-import { Navigate, useNavigate } from "react-router"
+import { useNavigate } from "react-router-dom"
+import PasswordField from "../components/base/PasswordField"
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false)
@@ -29,40 +30,33 @@ export default function RegisterPage() {
         }}
       >
         <Stack spacing={6}>
-          <Typography variant="h4">Login</Typography>
-          <TextField label="Nombre de Usuario" variant="standard" autoFocus />
-          <TextField
+          <Typography variant="h4">Crea una cuenta</Typography>
+          <TextField label="Nombre de usuario" variant="standard" autoFocus />
+
+          <Stack direction="row" spacing={2}>
+            <TextField label="Nombre" variant="standard" />
+            <TextField label="Apellido" variant="standard" />
+          </Stack>
+
+          <PasswordField
             label="Contraseña"
-            variant="standard"
-            type={showPassword ? "text" : "password"}
-            value={password}
             onChange={(e) => setPassword(e.target.value)}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={() => {
-                      setShowPassword(!showPassword)
-                    }}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
           />
+          <PasswordField
+            label="Confirmar contraseña"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
           <Button
-            sx={{ width: "100px", alignSelf: "center" }}
+            sx={{ width: "150px", alignSelf: "center" }}
             variant="contained"
           >
-            Login
-          </Button>
-          <Link underline="none" onClick={() => navigate("")}>
             Registrarse
+          </Button>
+          <Typography variant="caption">¿Ya tienes una cuenta?</Typography>
+          <Link underline="none" onClick={() => navigate("/login")}>
+            Iniciar sesión
           </Link>
-          <Typography variant="subtitle1">Registrarse</Typography>
         </Stack>
       </Paper>
     </Container>
