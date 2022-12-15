@@ -1,10 +1,14 @@
 import { useMutation } from "@tanstack/react-query"
+import { AxiosResponse, AxiosError } from "axios"
 import { connection } from "./axios.config"
+import { formatErrorResponse } from "./utils"
 
 type Credetials = {
   username: string
   password: string
 }
+
+type LoginError = Credetials & { error: string }
 
 interface User {
   id: number
@@ -21,17 +25,20 @@ type LoginResponse = {
 }
 
 export function useLogin() {
-  const { isLoading, data, error, mutate } = useMutation({
-    mutationFn: (credecials: Credetials) =>
-      connection.post<LoginResponse>("users/login/", credecials),
+  const { isLoading, data, error, mutate } = useMutation<
+    AxiosResponse<LoginResponse>,
+    AxiosError<LoginError>,
+    Credetials
+  >({
+    mutationFn: (credecials) => connection.post("users/login/", credecials),
     onSuccess({ data }) {
       setToken(data.token)
     },
   })
   return {
     isSenddingLogin: isLoading,
-    loginData: data,
-    loginError: error,
+    loginData: data?.data,
+    loginError: error?.response?.data,
     sentLogin: mutate,
   }
 }

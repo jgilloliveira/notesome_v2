@@ -14,10 +14,13 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import PasswordField from "../components/base/PasswordField"
 import { useLogin } from "../connections/session.connection"
+import { formatErrorResponse } from "../connections/utils"
 
 export default function LoginPage() {
   const [password, setPassword] = useState("")
   const [username, setUsername] = useState("")
+  const [usernameRef, setUsernameRef] = useState<any>(null)
+  const [passwordRef, setPasswordRef] = useState<any>(null)
 
   const navigate = useNavigate()
   const { isSenddingLogin, loginData, loginError, sentLogin } = useLogin()
@@ -29,8 +32,10 @@ export default function LoginPage() {
         password,
       },
       {
-        onSuccess(data, variables, context) {
-          console.log(data)
+        onError(error, variables, context) {
+          if (error?.response?.data.username && usernameRef) usernameRef.focus()
+          else if (error?.response?.data.password && passwordRef)
+            passwordRef.focus()
         },
       }
     )
@@ -52,12 +57,20 @@ export default function LoginPage() {
             variant="standard"
             autoFocus
             value={username}
+            error={Boolean(loginError?.username)}
+            helperText={loginError?.username}
             onChange={(e) => setUsername(e.target.value)}
+            onKeyPress={(e) => e.key === "Enter" && handleLogin()}
+            inputRef={setUsernameRef}
           />
           <PasswordField
             label="Contraseña"
             value={password}
+            error={Boolean(loginError?.password)}
+            helperText={loginError?.password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyPress={(e) => e.key === "Enter" && handleLogin()}
+            inputRef={setPasswordRef}
           />
           <Button
             sx={{ width: "100px", alignSelf: "center" }}
