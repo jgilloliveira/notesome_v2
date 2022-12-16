@@ -8,7 +8,19 @@ type Credetials = {
   password: string
 }
 
-type LoginError = Credetials & { error: string }
+type RegisterData = {
+  username: string
+  email: string
+  firstName: string
+  lastName: string
+  password: string
+}
+
+type ServerError<T> = {
+  error: string
+} & T
+
+type AxiosServerError<T> = AxiosError<ServerError<T>>
 
 interface User {
   id: number
@@ -27,10 +39,9 @@ type LoginResponse = {
 export function useLogin() {
   const { isLoading, data, error, mutate } = useMutation<
     AxiosResponse<LoginResponse>,
-    AxiosError<LoginError>,
+    AxiosServerError<Credetials>,
     Credetials
-  >({
-    mutationFn: (credecials) => connection.post("users/login/", credecials),
+  >((credecials) => connection.post("users/login/", credecials), {
     onSuccess({ data }) {
       setToken(data.token)
     },
@@ -41,6 +52,14 @@ export function useLogin() {
     loginError: error?.response?.data,
     sentLogin: mutate,
   }
+}
+
+export function useRegister() {
+  const { isLoading, data, error, mutate } = useMutation<
+    AxiosResponse<LoginResponse>,
+    AxiosServerError<RegisterData>,
+    RegisterData
+  >((userData) => connection.post("users/register/", userData))
 }
 
 export function setToken(token: string) {

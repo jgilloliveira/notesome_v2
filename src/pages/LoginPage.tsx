@@ -9,7 +9,10 @@ import {
   InputAdornment,
   IconButton,
   Link,
+  Alert,
+  AlertTitle,
 } from "@mui/material"
+import { useSnackbar } from "notistack"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import PasswordField from "../components/base/PasswordField"
@@ -52,12 +55,15 @@ export default function LoginPage() {
       >
         <Stack spacing={6}>
           <Typography variant="h4">Login</Typography>
+          {loginError?.error && (
+            <Alert severity="error">{loginError?.error}</Alert>
+          )}
           <TextField
             label="Nombre de usuario"
             variant="standard"
             autoFocus
             value={username}
-            error={Boolean(loginError?.username)}
+            error={Boolean(loginError?.username || loginError?.error)}
             helperText={loginError?.username}
             onChange={(e) => setUsername(e.target.value)}
             onKeyPress={(e) => e.key === "Enter" && handleLogin()}
@@ -66,7 +72,7 @@ export default function LoginPage() {
           <PasswordField
             label="Contraseña"
             value={password}
-            error={Boolean(loginError?.password)}
+            error={Boolean(loginError?.password || loginError?.error)}
             helperText={loginError?.password}
             onChange={(e) => setPassword(e.target.value)}
             onKeyPress={(e) => e.key === "Enter" && handleLogin()}
