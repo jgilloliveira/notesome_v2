@@ -14,6 +14,7 @@ type RegisterData = {
   firstName: string
   lastName: string
   password: string
+  passwordConfirm: string
 }
 
 type ServerError<T> = {
@@ -50,7 +51,7 @@ export function useLogin() {
     isSenddingLogin: isLoading,
     loginData: data?.data,
     loginError: error?.response?.data,
-    sentLogin: mutate,
+    sendLogin: mutate,
   }
 }
 
@@ -59,7 +60,18 @@ export function useRegister() {
     AxiosResponse<LoginResponse>,
     AxiosServerError<RegisterData>,
     RegisterData
-  >((userData) => connection.post("users/register/", userData))
+  >((userData) => connection.post("users/register/", userData), {
+    onSuccess({ data }) {
+      setToken(data.token)
+    },
+  })
+
+  return {
+    isSenddingRegister: isLoading,
+    registerData: data?.data,
+    registerError: error?.response?.data,
+    sendRegister: mutate,
+  }
 }
 
 export function setToken(token: string) {

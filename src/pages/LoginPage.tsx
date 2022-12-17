@@ -26,10 +26,10 @@ export default function LoginPage() {
   const [passwordRef, setPasswordRef] = useState<any>(null)
 
   const navigate = useNavigate()
-  const { isSenddingLogin, loginData, loginError, sentLogin } = useLogin()
+  const { isSenddingLogin, loginData, loginError, sendLogin } = useLogin()
 
   function handleLogin() {
-    sentLogin(
+    sendLogin(
       {
         username,
         password,
