@@ -16,8 +16,8 @@ import { useSnackbar } from "notistack"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import PasswordField from "../components/base/PasswordField"
-import { useLogin } from "../connections/session.connection"
-import { formatErrorResponse } from "../connections/utils"
+import { useLogin } from "../queries/session.query"
+import { formatErrorResponse } from "../queries/utils"
 
 export default function LoginPage() {
   const [password, setPassword] = useState("")
@@ -35,6 +35,9 @@ export default function LoginPage() {
         password,
       },
       {
+        onSuccess(data, variables, context) {
+          navigate("/", { replace: true })
+        },
         onError(error, variables, context) {
           if (error?.response?.data.username && usernameRef) usernameRef.focus()
           else if (error?.response?.data.password && passwordRef)

@@ -14,7 +14,7 @@ import {
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import PasswordField from "../components/base/PasswordField"
-import { useRegister } from "../connections/session.connection"
+import { useRegister } from "../queries/session.query"
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false)

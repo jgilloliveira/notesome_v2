@@ -3,12 +3,13 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import { SnackbarProvider } from "notistack"
 import { useState } from "react"
 import "./App.css"
+import { loadSession } from "./queries/session.query"
 import { AppsRoutes } from "./routes/AppsRoute"
 
 const queryClient = new QueryClient()
 
 function App() {
-  const [count, setCount] = useState(0)
+  loadSession()
 
   return (
     <div className="App">
