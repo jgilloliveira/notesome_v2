@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query"
 import { AxiosResponse, AxiosError } from "axios"
-import { connection } from "./axios.config"
+import { connection, sessionConnection } from "./axios.config"
 import { formatErrorResponse } from "./utils"
 
 type Credetials = {
@@ -42,11 +42,15 @@ export function useLogin() {
     AxiosResponse<LoginResponse>,
     AxiosServerError<Credetials>,
     Credetials
-  >((credecials) => connection.post("users/login/", credecials), {
-    onSuccess({ data }) {
-      setToken(data.token)
-    },
-  })
+  >(
+    (credecials) =>
+      sessionConnection.post("users/login/", credecials, { auth: undefined }),
+    {
+      onSuccess({ data }) {
+        setToken(data.token)
+      },
+    }
+  )
   return {
     isSenddingLogin: isLoading,
     loginData: data?.data,
@@ -60,7 +64,7 @@ export function useRegister() {
     AxiosResponse<LoginResponse>,
     AxiosServerError<RegisterData>,
     RegisterData
-  >((userData) => connection.post("users/register/", userData), {
+  >((userData) => sessionConnection.post("users/register/", userData), {
     onSuccess({ data }) {
       setToken(data.token)
     },

@@ -7,7 +7,17 @@ export const connection = axios.create({
   baseURL: BASE_URL,
 })
 
-axios.interceptors.response.use(
+connection.interceptors.response.use(
+  (response) => response,
+  (error) => formatErrorResponse(error)
+  //throw new Error(formatErrorResponse(error))
+)
+
+export const sessionConnection = axios.create({
+  baseURL: BASE_URL,
+})
+
+sessionConnection.interceptors.response.use(
   (response) => response,
   (error) => formatErrorResponse(error)
   //throw new Error(formatErrorResponse(error))

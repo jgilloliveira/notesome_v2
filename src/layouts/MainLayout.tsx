@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Box,
   CssBaseline,
   CSSObject,
@@ -22,8 +23,10 @@ import HomeIcon from "@mui/icons-material/Home"
 import StarIcon from "@mui/icons-material/Star"
 import ArchiveIcon from "@mui/icons-material/Archive"
 import DeleteIcon from "@mui/icons-material/Delete"
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import { useState } from "react"
 import { Stack } from "@mui/system"
+import { useGetCategories } from "../queries/category.query"
 
 const drawerWidth = 240
 
@@ -67,6 +70,8 @@ const Drawer = styled(MuiDrawer, {
 
 export default function MiniDrawer() {
   const [open, setOpen] = useState(false)
+  const { isGettingCategories, categories, isCategoriesError } =
+    useGetCategories()
 
   const drawerOptions = [
     {
@@ -139,8 +144,12 @@ export default function MiniDrawer() {
             )
           }
         >
-          {["Categoría 1", "Categoría 2", "Categoría 3"].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: "block" }}>
+          {categories?.map((category) => (
+            <ListItem
+              key={category.id}
+              disablePadding
+              sx={{ display: "block" }}
+            >
               <ListItemButton
                 sx={{
                   minHeight: 48,
@@ -155,12 +164,50 @@ export default function MiniDrawer() {
                     justifyContent: "center",
                   }}
                 >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  <Avatar
+                    sx={{
+                      width: "28px",
+                      height: "28px",
+                      fontSize: "14px",
+                      bgcolor: "rgba(0, 0, 0, 0.54)",
+                    }}
+                  >
+                    {category.initials}
+                  </Avatar>
                 </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText
+                  primary={category.name}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
               </ListItemButton>
             </ListItem>
           ))}
+          {/* Botón de mostrar más */}
+          {open && (
+            <ListItem disablePadding sx={{ display: "block" }}>
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <ExpandMoreIcon />
+                </ListItemIcon>
+                <ListItemText
+                  primary="Mostrar más"
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItemButton>
+            </ListItem>
+          )}
         </List>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
