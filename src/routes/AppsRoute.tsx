@@ -1,7 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
 import { isLogged } from "../queries/session.query"
 import MainLayout from "../layouts/MainLayout"
-import { HomePage } from "../pages/HomePage"
+import HomePage from "../pages/HomePage"
 import LoginPage from "../pages/LoginPage"
 import RegisterPage from "../pages/RegisterPage"
 
@@ -26,7 +26,14 @@ function AuthRoutes() {
       <Route path="/favorites" element={<FavoritesPage/>}/>
       <Route path="/deleteds" element={<DeletedsPage/>}/>
       <Route path="/categories/:categoryId" element={<HomePage/>}/> */}
-      <Route path="/" element={<MainLayout />} />
+      <Route
+        path="/"
+        element={
+          <MainLayout>
+            <HomePage />
+          </MainLayout>
+        }
+      />
     </Routes>
   )
 }
