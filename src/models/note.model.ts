@@ -1,7 +1,7 @@
 import { Category } from "./category.model"
 
-// TODO: Folder
 export interface Note {
+  id: string
   title: string
   content: string
   color: string

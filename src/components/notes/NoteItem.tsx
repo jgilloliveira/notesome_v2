@@ -7,14 +7,14 @@ type NoteItemProps = {
 
 export default function NoteItem({ note }: NoteItemProps) {
   return (
-    <Paper elevation={3}>
-      <Typography variant="h6">Titulo</Typography>
-      <Typography variant="body1">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum,
-        voluptatibus! Molestiae pariatur, nisi eum quae odio suscipit nemo,
-        dolore debitis aspernatur ipsum omnis similique eius ipsa incidunt error
-        deserunt illo.
+    <Paper
+      elevation={3}
+      sx={{ width: "300px", height: "320px", padding: 3, borderRadius: "20px" }}
+    >
+      <Typography variant="h6">
+        <strong>{note.title}</strong>
       </Typography>
+      <Typography variant="body1">{note.content}</Typography>
     </Paper>
   )
 }
