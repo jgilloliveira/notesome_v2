@@ -8,4 +8,5 @@ export interface Note {
   isFavorite: boolean
   isDeleted: boolean
   categories: Category[]
+  creationDate: string
 }

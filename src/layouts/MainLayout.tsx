@@ -221,7 +221,9 @@ export default function MainLayout(props: ContainerProps) {
           )}
         </List>
       </Drawer>
-      <Container maxWidth="md" {...props}></Container>
+      <Container maxWidth="md" {...props}>
+        {props.children}
+      </Container>
     </Box>
   )
 }
