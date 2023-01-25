@@ -13,6 +13,7 @@ import {
   ListItemIcon,
   ListItemText,
   ListSubheader,
+  StackProps,
   styled,
   Theme,
   Typography,
@@ -26,7 +27,7 @@ import StarIcon from "@mui/icons-material/Star"
 import ArchiveIcon from "@mui/icons-material/Archive"
 import DeleteIcon from "@mui/icons-material/Delete"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
-import { useState } from "react"
+import { ElementType, useState } from "react"
 import { Stack } from "@mui/system"
 import { useGetCategories } from "../queries/category.query"
 
@@ -70,7 +71,7 @@ const Drawer = styled(MuiDrawer, {
   }),
 }))
 
-export default function MainLayout(props: ContainerProps) {
+export default function MainLayout(props: Omit<StackProps, "component">) {
   const [open, setOpen] = useState(false)
   const {
     isGettingCategories,
@@ -100,7 +101,7 @@ export default function MainLayout(props: ContainerProps) {
   ]
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Stack direction="row" sx={{ width: "100vw" }}>
       <CssBaseline />
       <Drawer variant="permanent" open={open}>
         <Stack direction="row">
@@ -221,9 +222,7 @@ export default function MainLayout(props: ContainerProps) {
           )}
         </List>
       </Drawer>
-      <Container maxWidth="md" {...props}>
-        {props.children}
-      </Container>
-    </Box>
+      <Stack sx={{ flexGrow: 1 }}>{props.children}</Stack>
+    </Stack>
   )
 }

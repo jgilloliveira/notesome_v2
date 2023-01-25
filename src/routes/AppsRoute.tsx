@@ -1,7 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
 import { isLogged } from "../queries/session.query"
 import MainLayout from "../layouts/MainLayout"
-import HomePage from "../pages/HomePage"
+import MainPage from "../pages/MainPage"
 import LoginPage from "../pages/LoginPage"
 import RegisterPage from "../pages/RegisterPage"
 
@@ -30,7 +30,7 @@ function AuthRoutes() {
         path="/"
         element={
           <MainLayout>
-            <HomePage />
+            <MainPage title="Inicio" />
           </MainLayout>
         }
       />
