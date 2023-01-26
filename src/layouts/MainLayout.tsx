@@ -30,6 +30,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import { ElementType, useState } from "react"
 import { Stack } from "@mui/system"
 import { useGetCategories } from "../queries/category.query"
+import { useNavigate } from "react-router-dom"
 
 const drawerWidth = 240
 
@@ -73,6 +74,7 @@ const Drawer = styled(MuiDrawer, {
 
 export default function MainLayout(props: Omit<StackProps, "component">) {
   const [open, setOpen] = useState(false)
+  const navigate = useNavigate()
   const {
     isGettingCategories,
     categories,
@@ -85,18 +87,22 @@ export default function MainLayout(props: Omit<StackProps, "component">) {
     {
       label: "Inicio",
       icon: <HomeIcon />,
+      url: "/",
     },
     {
       label: "Favoritos",
       icon: <StarIcon />,
+      url: "/favorites",
     },
     {
       label: "Archivados",
       icon: <ArchiveIcon />,
+      url: "/archived",
     },
     {
       label: "Eliminados",
       icon: <DeleteIcon />,
+      url: "/deleteds",
     },
   ]
 
@@ -110,18 +116,21 @@ export default function MainLayout(props: Omit<StackProps, "component">) {
           </IconButton>
         </Stack>
         <Divider />
-        <List>
+        <List sx={{ px: 2 }}>
           {drawerOptions.map((option) => (
             <ListItem
               key={option.label}
               disablePadding
               sx={{ display: "block" }}
+              onClick={() => navigate(option.url)}
             >
               <ListItemButton
                 sx={{
                   minHeight: 48,
                   justifyContent: open ? "initial" : "center",
                   px: 2.5,
+
+                  borderRadius: 2,
                 }}
               >
                 <ListItemIcon
@@ -156,13 +165,14 @@ export default function MainLayout(props: Omit<StackProps, "component">) {
             <ListItem
               key={category.id}
               disablePadding
-              sx={{ display: "block" }}
+              sx={{ display: "block", px: 2 }}
             >
               <ListItemButton
                 sx={{
                   minHeight: 48,
                   justifyContent: open ? "initial" : "center",
                   px: 2.5,
+                  borderRadius: 2,
                 }}
               >
                 <ListItemIcon
@@ -185,7 +195,7 @@ export default function MainLayout(props: Omit<StackProps, "component">) {
                 </ListItemIcon>
                 <ListItemText
                   primary={category.name}
-                  sx={{ opacity: open ? 1 : 0 }}
+                  sx={{ opacity: open ? 1 : 0, overflow: "hidden" }}
                 />
               </ListItemButton>
             </ListItem>
@@ -194,7 +204,7 @@ export default function MainLayout(props: Omit<StackProps, "component">) {
           {hasCategoriesNextPage && (
             <ListItem
               disablePadding
-              sx={{ display: "block" }}
+              sx={{ display: "block", px: 2, borderRadius: 2 }}
               onClick={loadNextCategoriesPage}
             >
               <ListItemButton

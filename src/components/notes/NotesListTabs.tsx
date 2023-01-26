@@ -8,7 +8,7 @@ export default function NotesListTabs() {
     setSelectedTab(index)
   }
   return (
-    <Stack>
+    <Stack sx={{ px: 5 }}>
       <Tabs value={selectedTab} onChange={handleChangeTab}>
         <Tab label="Todos" />
         <Tab label="Favoritos" />

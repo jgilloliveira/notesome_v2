@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material"
+import { Divider, Stack } from "@mui/material"
 import NotesList from "../components/notes/NotesList"
 import NotesListHeader from "../components/notes/NotesListHeader"
 import NotesListTabs from "../components/notes/NotesListTabs"
@@ -11,6 +11,7 @@ export default function MainPage({ title }: MainPageProps) {
     <Stack>
       <NotesListHeader title={title} />
       <NotesListTabs />
+      <Divider />
       <NotesList />
     </Stack>
   )

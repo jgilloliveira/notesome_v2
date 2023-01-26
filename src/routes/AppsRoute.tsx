@@ -22,10 +22,30 @@ function AuthRoutes() {
 
   return (
     <Routes>
-      {/* <Route path="/folders/:parentFolder" element={<HomePage/>}/>
-      <Route path="/favorites" element={<FavoritesPage/>}/>
-      <Route path="/deleteds" element={<DeletedsPage/>}/>
-      <Route path="/categories/:categoryId" element={<HomePage/>}/> */}
+      <Route
+        path="/favorites"
+        element={
+          <MainLayout>
+            <MainPage title="Favoritos" />
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/archived"
+        element={
+          <MainLayout>
+            <MainPage title="Archivados" />
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/deleteds"
+        element={
+          <MainLayout>
+            <MainPage title="Eliminados" />
+          </MainLayout>
+        }
+      />
       <Route
         path="/"
         element={

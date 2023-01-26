@@ -23,7 +23,6 @@ export default function NotesListHeader({ title }: NotesListHeaderProps) {
         <Typography variant="h3">{title}</Typography>
         <TextField placeholder="Buscar nota"></TextField>
       </Stack>
-      <Divider />
     </Stack>
   )
 }
