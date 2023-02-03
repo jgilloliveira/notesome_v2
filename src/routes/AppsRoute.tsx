@@ -1,5 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
-import { isLogged } from "../queries/session.query"
+import { isLogged } from "../queries/sessions.query"
 import MainLayout from "../layouts/MainLayout"
 import MainPage from "../pages/MainPage"
 import LoginPage from "../pages/LoginPage"
@@ -26,7 +26,7 @@ function AuthRoutes() {
         path="/favorites"
         element={
           <MainLayout>
-            <MainPage title="Favoritos" />
+            <MainPage title="Favoritos" filter="isFavorite" />
           </MainLayout>
         }
       />

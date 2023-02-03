@@ -5,3 +5,22 @@
 body {
   place-items: start !important;
 }
+
+.text-weight-bold,
+.text-weight-bold > * {
+  font-weight: bold !important;
+}
+
+.text-weight-medium,
+.text-weight-medium > * {
+  font-weight: 500 !important;
+}
+
+.text-weight-bolder,
+.text-weight-bolder > * {
+  font-weight: 900 !important;
+}
+
+.darker {
+  filter: brightness(0.8);
+}

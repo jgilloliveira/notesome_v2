@@ -16,7 +16,7 @@ import { useSnackbar } from "notistack"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import PasswordField from "../components/base/PasswordField"
-import { useLogin } from "../queries/session.query"
+import { useLogin } from "../queries/sessions.query"
 import { formatErrorResponse } from "../queries/utils"
 
 export default function LoginPage() {
