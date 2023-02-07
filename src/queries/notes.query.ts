@@ -13,8 +13,12 @@ type GetPropsNotes = { filter?: NoteFilters }
 function getParams(props?: GetPropsNotes) {
   return {
     ...(props?.filter === "isFavorite" && { is_favorite: "True" }),
-    ...(props?.filter === "isArchived" && { is_archived: "True" }),
-    ...(props?.filter === "isDeleted" && { is_deleted: "True" }),
+    ...(props?.filter === "isArchived"
+      ? { is_archived: "True" }
+      : { is_archived: "False" }),
+    ...(props?.filter === "isDeleted"
+      ? { is_deleted: "True" }
+      : { is_deleted: "False" }),
   }
 }
 

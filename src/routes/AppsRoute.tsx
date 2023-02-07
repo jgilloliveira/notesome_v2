@@ -34,7 +34,7 @@ function AuthRoutes() {
         path="/archived"
         element={
           <MainLayout>
-            <MainPage title="Archivados" />
+            <MainPage title="Archivados" filter="isArchived" />
           </MainLayout>
         }
       />
@@ -42,9 +42,13 @@ function AuthRoutes() {
         path="/deleteds"
         element={
           <MainLayout>
-            <MainPage title="Eliminados" />
+            <MainPage title="Eliminados" filter="isDeleted" />
           </MainLayout>
         }
+      />
+      <Route
+        path="/categories/:id"
+        element={<MainLayout>{/* <MainPage/> */}</MainLayout>}
       />
       <Route
         path="/"
