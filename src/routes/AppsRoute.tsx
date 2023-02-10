@@ -4,6 +4,7 @@ import MainLayout from "../layouts/MainLayout"
 import MainPage from "../pages/MainPage"
 import LoginPage from "../pages/LoginPage"
 import RegisterPage from "../pages/RegisterPage"
+import MainPageByCategory from "../pages/MainPageByCategory"
 
 export function AppsRoutes() {
   return (
@@ -47,8 +48,12 @@ function AuthRoutes() {
         }
       />
       <Route
-        path="/categories/:id"
-        element={<MainLayout>{/* <MainPage/> */}</MainLayout>}
+        path="/categories/:categoryId"
+        element={
+          <MainLayout>
+            <MainPageByCategory />
+          </MainLayout>
+        }
       />
       <Route
         path="/"

@@ -8,9 +8,10 @@ import { Note } from "../models/note.model"
 import { connection } from "./axios.config"
 
 export type NoteFilters = "isFavorite" | "isArchived" | "isDeleted"
-type GetPropsNotes = { filter?: NoteFilters }
 
-function getParams(props?: GetPropsNotes) {
+export type GetNotesProps = { filter?: NoteFilters; categoryIdFilter?: string }
+
+function getParams(props?: GetNotesProps) {
   return {
     ...(props?.filter === "isFavorite" && { is_favorite: "True" }),
     ...(props?.filter === "isArchived"
@@ -19,10 +20,13 @@ function getParams(props?: GetPropsNotes) {
     ...(props?.filter === "isDeleted"
       ? { is_deleted: "True" }
       : { is_deleted: "False" }),
+    ...(props?.categoryIdFilter && {
+      categories: props?.categoryIdFilter,
+    }),
   }
 }
 
-export default function useGetNotes(props?: GetPropsNotes) {
+export default function useGetNotes(props?: GetNotesProps) {
   const location = useLocation()
 
   const { isLoading, data, isError, refetch } = useQuery<

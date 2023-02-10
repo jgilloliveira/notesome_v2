@@ -1,9 +1,9 @@
 import { List } from "@mui/material"
 import { Stack } from "@mui/system"
-import useGetNotes, { NoteFilters } from "../../queries/notes.query"
+import useGetNotes, { GetNotesProps } from "../../queries/notes.query"
 import NoteItem from "./NoteItem"
 
-type NotesListProps = { filter?: NoteFilters }
+type NotesListProps = GetNotesProps
 
 export default function NotesList(props?: NotesListProps) {
   const { isGettingNotes, notes, isNotesError } = useGetNotes(props)

@@ -39,3 +39,20 @@ export function useGetCategories() {
     hasCategoriesNextPage: Boolean(data?.data.next),
   }
 }
+
+export function useGetCategoryById(id?: string) {
+  const { data, isLoading, error, isError, refetch } = useQuery<
+    AxiosResponse<Category>,
+    AxiosError
+  >(["get-category", id], () => connection.get(`categories/${id}/`), {
+    enabled: Boolean(id),
+  })
+
+  return {
+    category: data?.data,
+    categoryError: error?.response?.data,
+    isGettingCategoryById: isLoading,
+    isGettingCategoryByIdError: isError,
+    refetchCategoryById: refetch,
+  }
+}

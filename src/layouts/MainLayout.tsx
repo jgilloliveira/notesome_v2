@@ -186,6 +186,7 @@ export default function MainLayout(props: Omit<StackProps, "component">) {
               key={category.id}
               disablePadding
               sx={{ display: "block", px: 1 }}
+              onClick={() => navigate(`/categories/${category.id}`)}
             >
               <ListItemButton
                 sx={{
