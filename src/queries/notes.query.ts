@@ -44,5 +44,6 @@ export default function useGetNotes(props?: GetNotesProps) {
     isGettingNotes: isLoading,
     notes: data?.data.results,
     isNotesError: isError,
+    refetchNotes: refetch,
   }
 }
