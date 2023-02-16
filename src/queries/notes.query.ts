@@ -9,7 +9,11 @@ import { connection } from "./axios.config"
 
 export type NoteFilters = "isFavorite" | "isArchived" | "isDeleted"
 
-export type GetNotesProps = { filter?: NoteFilters; categoryIdFilter?: string }
+export type GetNotesProps = {
+  filter?: NoteFilters
+  categoryIdFilter?: string
+  searchText?: string
+}
 
 function getParams(props?: GetNotesProps) {
   return {
@@ -23,6 +27,7 @@ function getParams(props?: GetNotesProps) {
     ...(props?.categoryIdFilter && {
       categories: props?.categoryIdFilter,
     }),
+    ...(props?.searchText && { search: props?.searchText }),
   }
 }
 

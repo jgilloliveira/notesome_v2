@@ -4,16 +4,10 @@ import { useEffect } from "react"
 import useGetNotes, { GetNotesProps } from "../../queries/notes.query"
 import NoteItem from "./NoteItem"
 
-type NotesListProps = GetNotesProps & {
-  onCreate?: (refetchNotesFn: Function) => void
-}
+type NotesListProps = GetNotesProps
 
 export default function NotesList(props?: NotesListProps) {
-  const { notes, refetchNotes } = useGetNotes(props)
-
-  useEffect(() => {
-    if (props?.onCreate) props?.onCreate(refetchNotes)
-  }, [])
+  const { notes } = useGetNotes(props)
 
   return (
     <List sx={{ p: 5 }}>

@@ -1,20 +1,35 @@
-import { Divider, Stack } from "@mui/material"
+import { Divider, Stack, Typography } from "@mui/material"
+import { useEffect, useState } from "react"
 import NotesList from "../components/notes/NotesList"
 import NotesListHeader from "../components/notes/NotesListHeader"
 import NotesListTabs from "../components/notes/NotesListTabs"
-import { NoteFilters } from "../queries/notes.query"
+import useGetNotes, { NoteFilters } from "../queries/notes.query"
 
 type MainPageProps = {
   title: string
   filter?: NoteFilters
 }
 export default function MainPage({ title, filter }: MainPageProps) {
+  const [searchNoteText, setSearchNoteText] = useState("")
+
+  const { refetchNotes } = useGetNotes({
+    filter,
+    searchText: searchNoteText,
+  })
+
+  useEffect(() => {
+    refetchNotes()
+  }, [searchNoteText])
+
   return (
     <Stack>
-      <NotesListHeader title={title} />
-      {/* <NotesListTabs /> */}
+      <NotesListHeader
+        title={title}
+        searchNoteText={searchNoteText}
+        onChangeSearchBar={(text) => setSearchNoteText(text)}
+      />
       <Divider />
-      <NotesList filter={filter} />
+      <NotesList filter={filter} searchText={searchNoteText} />
     </Stack>
   )
 }

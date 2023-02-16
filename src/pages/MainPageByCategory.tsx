@@ -1,4 +1,4 @@
-import { Divider, Stack, TextField } from "@mui/material"
+import { Divider, Stack, TextField, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import NotesList from "../components/notes/NotesList"
@@ -14,25 +14,35 @@ export default function MainPageByCategory() {
   const [noteFilter, setNoteFilter] = useState<NoteFilters | undefined>(
     undefined
   )
+  const [searchNoteText, setSearchNoteText] = useState("")
   const { refetchNotes } = useGetNotes({
     filter: noteFilter,
     categoryIdFilter: categoryId,
+    searchText: searchNoteText,
   })
 
   useEffect(() => {
     refetchNotes()
-  }, [noteFilter])
+  }, [noteFilter, searchNoteText])
 
   function handleOnChangeTabs(filter: NoteFilters | undefined) {
     setNoteFilter(filter)
   }
-
+  // TODO: Pasar noteText a NoteList
   return category ? (
     <Stack>
-      <NotesListHeader title={category.name} />
+      <NotesListHeader
+        title={category.name}
+        searchNoteText={searchNoteText}
+        onChangeSearchBar={(text) => setSearchNoteText(text)}
+      />
       <NotesListTabs onChange={handleOnChangeTabs} />
       <Divider />
-      <NotesList filter={noteFilter} categoryIdFilter={categoryId} />
+      <NotesList
+        filter={noteFilter}
+        categoryIdFilter={categoryId}
+        searchText={searchNoteText}
+      />
     </Stack>
   ) : (
     <></>

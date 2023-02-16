@@ -6,12 +6,15 @@ import {
   TextField,
   Typography,
 } from "@mui/material"
+import { useState } from "react"
 
 type NotesListHeaderProps = {
   title: string
+  searchNoteText: string
+  onChangeSearchBar: (text: string) => void
 }
 
-export default function NotesListHeader({ title }: NotesListHeaderProps) {
+export default function NotesListHeader(props: NotesListHeaderProps) {
   return (
     <Stack>
       <Stack
@@ -20,8 +23,12 @@ export default function NotesListHeader({ title }: NotesListHeaderProps) {
         alignItems={"center"}
         sx={{ padding: 5 }}
       >
-        <Typography variant="h3">{title}</Typography>
-        <TextField placeholder="Buscar nota"></TextField>
+        <Typography variant="h3">{props.title}</Typography>
+        <TextField
+          placeholder="Buscar nota"
+          value={props.searchNoteText}
+          onChange={(e) => props.onChangeSearchBar(e.target.value)}
+        ></TextField>
       </Stack>
     </Stack>
   )
