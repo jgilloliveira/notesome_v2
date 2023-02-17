@@ -2,19 +2,21 @@ import {
   Box,
   CssBaseline,
   Divider,
+  IconButton,
   Stack,
   TextField,
   Typography,
 } from "@mui/material"
+import SearchIcon from "@mui/icons-material/Search"
 import { useState } from "react"
 
 type NotesListHeaderProps = {
   title: string
-  searchNoteText: string
   onChangeSearchBar: (text: string) => void
 }
 
 export default function NotesListHeader(props: NotesListHeaderProps) {
+  const [searchText, setSearchText] = useState("")
   return (
     <Stack>
       <Stack
@@ -24,11 +26,16 @@ export default function NotesListHeader(props: NotesListHeaderProps) {
         sx={{ padding: 5 }}
       >
         <Typography variant="h3">{props.title}</Typography>
-        <TextField
-          placeholder="Buscar nota"
-          value={props.searchNoteText}
-          onChange={(e) => props.onChangeSearchBar(e.target.value)}
-        ></TextField>
+        <Stack direction="row">
+          <IconButton onClick={() => props.onChangeSearchBar(searchText)}>
+            <SearchIcon />
+          </IconButton>
+          <TextField
+            placeholder="Buscar nota"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          ></TextField>
+        </Stack>
       </Stack>
     </Stack>
   )

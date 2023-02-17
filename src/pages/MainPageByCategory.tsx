@@ -33,7 +33,6 @@ export default function MainPageByCategory() {
     <Stack>
       <NotesListHeader
         title={category.name}
-        searchNoteText={searchNoteText}
         onChangeSearchBar={(text) => setSearchNoteText(text)}
       />
       <NotesListTabs onChange={handleOnChangeTabs} />
