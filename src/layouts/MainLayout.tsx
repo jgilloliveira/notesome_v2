@@ -32,6 +32,7 @@ import { Stack } from "@mui/system"
 import { useGetCategories } from "../queries/categories.query"
 import { useLocation, useNavigate } from "react-router-dom"
 import { useTheme } from "@mui/material/styles"
+import NoteDrawer from "../components/notes/NoteDrawer"
 
 const drawerWidth = 240
 
@@ -264,6 +265,7 @@ export default function MainLayout(props: Omit<StackProps, "component">) {
         </List>
       </Drawer>
       <Stack sx={{ flexGrow: 1 }}>{props.children}</Stack>
+      <NoteDrawer />
     </Stack>
   )
 }

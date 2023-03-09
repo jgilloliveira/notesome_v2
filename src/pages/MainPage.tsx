@@ -25,7 +25,6 @@ export default function MainPage({ title, filter }: MainPageProps) {
     <Stack>
       <NotesListHeader
         title={title}
-        searchNoteText={searchNoteText}
         onChangeSearchBar={(text) => setSearchNoteText(text)}
       />
       <Divider />

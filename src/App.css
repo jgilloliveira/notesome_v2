@@ -24,3 +24,13 @@ body {
 .darker {
   filter: brightness(0.8);
 }
+
+.ql-toolbar.ql-snow,
+.ql-container.ql-snow {
+  border-left: none !important;
+  border-right: none !important;
+}
+
+.ql-container.ql-snow {
+  border-bottom: none !important;
+}
