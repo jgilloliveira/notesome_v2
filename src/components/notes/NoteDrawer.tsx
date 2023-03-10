@@ -24,6 +24,7 @@ import ColorLensIcon from "@mui/icons-material/ColorLens"
 import StarBorderIcon from "@mui/icons-material/StarBorder"
 import MoreVertIcon from "@mui/icons-material/MoreVert"
 import { useState } from "react"
+import { useSearchParams } from "react-router-dom"
 
 const drawerWidth = 768
 
@@ -39,6 +40,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 export default function NoteDrawer() {
   const theme = useTheme()
   const [open, setOpen] = React.useState(true)
+  const [searchParams, setSearchParams] = useSearchParams()
   const [noteContent, setNoteContent] = useState("")
 
   const handleDrawerOpen = () => {
@@ -46,67 +48,76 @@ export default function NoteDrawer() {
   }
 
   const handleDrawerClose = () => {
-    setOpen(false)
+    searchParams.delete("noteId")
+    setSearchParams(searchParams)
   }
 
+  const isOpenNoteDrawer = searchParams.get("noteId") !== null
+
   return (
-    <Box sx={{ display: "flex" }}>
-      <Drawer
-        sx={{
+    <Drawer
+      sx={{
+        width: isOpenNoteDrawer ? drawerWidth : 0,
+        flexShrink: 0,
+        "& .MuiDrawer-paper": {
           width: drawerWidth,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: drawerWidth,
-          },
-        }}
-        variant="persistent"
-        anchor="right"
-        open={open}
-      >
-        <DrawerHeader>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            sx={{ width: "100%" }}
-          >
-            <IconButton onClick={handleDrawerClose}>
+        },
+      }}
+      variant="persistent"
+      anchor="right"
+      open={isOpenNoteDrawer}
+    >
+      <DrawerHeader>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          sx={{ width: "100%" }}
+        >
+          <Stack direction="row" alignItems="flex-start">
+            <IconButton onClick={handleDrawerClose} sx={{ mt: 2.5 }}>
               <CloseIcon />
             </IconButton>
-            <Stack direction="row" spacing={1}>
-              <IconButton onClick={handleDrawerClose}>
-                <ColorLensIcon />
-              </IconButton>
-              <IconButton onClick={handleDrawerClose}>
-                <StarBorderIcon />
-              </IconButton>
-              <Button variant="contained">Guardar</Button>
-              <IconButton onClick={handleDrawerClose}>
-                <MoreVertIcon />
-              </IconButton>
-            </Stack>
+            <InputBase
+              multiline
+              placeholder="Escribe aquí el título..."
+              inputProps={{ maxLength: 64 }}
+              sx={{ py: 2, px: 1.25, fontSize: 32 }}
+            />
           </Stack>
-        </DrawerHeader>
-        <Divider />
-        {/* Note title */}
-        <Stack flexGrow={1}>
-          <InputBase
-            multiline
-            placeholder="Escribe aquí el título..."
-            sx={{ py: 2, px: 1.25, fontSize: 32 }}
-          />
-          <ReactQuill
-            theme="snow"
-            value={noteContent}
-            placeholder="Escribe aquí el contenido..."
-            onChange={setNoteContent}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              flexGrow: 1,
-            }}
-          ></ReactQuill>
+          <Stack
+            direction="row"
+            spacing={1}
+            alignItems="flex-start"
+            sx={{ mt: 2.5 }}
+          >
+            <IconButton onClick={handleDrawerClose}>
+              <ColorLensIcon />
+            </IconButton>
+            <IconButton onClick={handleDrawerClose}>
+              <StarBorderIcon />
+            </IconButton>
+            <Button variant="contained">Guardar</Button>
+            <IconButton onClick={handleDrawerClose}>
+              <MoreVertIcon />
+            </IconButton>
+          </Stack>
         </Stack>
-      </Drawer>
-    </Box>
+      </DrawerHeader>
+      <Divider />
+      {/* Note title */}
+      <Stack flexGrow={1}>
+        <ReactQuill
+          theme="snow"
+          value={noteContent}
+          placeholder="Escribe aquí el contenido..."
+          onChange={setNoteContent}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            flexGrow: 1,
+          }}
+        ></ReactQuill>
+      </Stack>
+    </Drawer>
   )
 }

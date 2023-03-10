@@ -3,6 +3,7 @@ import { Note } from "../../models/note.model"
 import { format } from "date-fns"
 import StarIcon from "@mui/icons-material/Star"
 import { shadeColor } from "../../utils/colors.util"
+import { useNavigate, useSearchParams } from "react-router-dom"
 
 type NoteItemProps = {
   note: Note
@@ -17,9 +18,17 @@ function dateFormat(date: string) {
 todas las categorías debajo del contenido de la nota */
 
 export default function NoteItem({ note }: NoteItemProps) {
+  const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
+  function handleNoteOnClick() {
+    console.log("Onclick paper")
+    searchParams.set("noteId", note.id)
+    setSearchParams(searchParams)
+  }
   return (
     <Paper
       elevation={3}
+      onClick={handleNoteOnClick}
       sx={{
         width: "300px",
         height: "320px",

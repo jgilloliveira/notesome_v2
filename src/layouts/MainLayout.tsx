@@ -75,7 +75,8 @@ const Drawer = styled(MuiDrawer, {
 }))
 
 export default function MainLayout(props: Omit<StackProps, "component">) {
-  const [open, setOpen] = useState(false)
+  const [openLeftDrawer, setOpenLeftDrawer] = useState(false)
+  const [openNoteDrawer, setOpenNoteDrawer] = useState(false)
   const location = useLocation()
 
   const theme = useTheme()
@@ -115,9 +116,12 @@ export default function MainLayout(props: Omit<StackProps, "component">) {
   return (
     <Stack direction="row" sx={{ width: "100vw" }}>
       <CssBaseline />
-      <Drawer variant="permanent" open={open}>
+      <Drawer variant="permanent" open={openLeftDrawer}>
         <Stack direction="row">
-          <IconButton onClick={() => setOpen(!open)} sx={{ p: "20px" }}>
+          <IconButton
+            onClick={() => setOpenLeftDrawer(!openLeftDrawer)}
+            sx={{ p: "20px" }}
+          >
             <MenuIcon />
           </IconButton>
         </Stack>
@@ -140,7 +144,7 @@ export default function MainLayout(props: Omit<StackProps, "component">) {
               <ListItemButton
                 sx={{
                   minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
+                  justifyContent: openLeftDrawer ? "initial" : "center",
                   px: 2.5,
                   borderRadius: 2,
                 }}
@@ -148,7 +152,7 @@ export default function MainLayout(props: Omit<StackProps, "component">) {
                 <ListItemIcon
                   sx={{
                     minWidth: 0,
-                    mr: open ? 3 : "auto",
+                    mr: openLeftDrawer ? 3 : "auto",
                     justifyContent: "center",
                     color: location.pathname === option.url ? "white" : "",
                   }}
@@ -163,7 +167,7 @@ export default function MainLayout(props: Omit<StackProps, "component">) {
                       : "text-weight-medium"
                   }
                   sx={{
-                    opacity: open ? 1 : 0,
+                    opacity: openLeftDrawer ? 1 : 0,
                     color: location.pathname === option.url ? "white" : "#777",
                   }}
                 />
@@ -175,7 +179,7 @@ export default function MainLayout(props: Omit<StackProps, "component">) {
 
         <List
           subheader={
-            open && (
+            openLeftDrawer && (
               <ListSubheader sx={{ textAlign: "left" }}>
                 Categorías
               </ListSubheader>
@@ -192,7 +196,7 @@ export default function MainLayout(props: Omit<StackProps, "component">) {
               <ListItemButton
                 sx={{
                   minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
+                  justifyContent: openLeftDrawer ? "initial" : "center",
                   px: 2.5,
                   borderRadius: 2,
                 }}
@@ -200,7 +204,7 @@ export default function MainLayout(props: Omit<StackProps, "component">) {
                 <ListItemIcon
                   sx={{
                     minWidth: 0,
-                    mr: open ? 3 : "auto",
+                    mr: openLeftDrawer ? 3 : "auto",
                     justifyContent: "center",
                   }}
                 >
@@ -223,7 +227,7 @@ export default function MainLayout(props: Omit<StackProps, "component">) {
                       : "text-weight-medium"
                   }
                   sx={{
-                    opacity: open ? 1 : 0,
+                    opacity: openLeftDrawer ? 1 : 0,
                     overflow: "hidden",
                     color: location.pathname === category.id ? "white" : "#777",
                   }}
@@ -241,7 +245,7 @@ export default function MainLayout(props: Omit<StackProps, "component">) {
               <ListItemButton
                 sx={{
                   minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
+                  justifyContent: openLeftDrawer ? "initial" : "center",
                   px: 2.5,
                   borderRadius: 2,
                 }}
@@ -249,7 +253,7 @@ export default function MainLayout(props: Omit<StackProps, "component">) {
                 <ListItemIcon
                   sx={{
                     minWidth: 0,
-                    mr: open ? 3 : "auto",
+                    mr: openLeftDrawer ? 3 : "auto",
                     justifyContent: "center",
                   }}
                 >
@@ -257,7 +261,7 @@ export default function MainLayout(props: Omit<StackProps, "component">) {
                 </ListItemIcon>
                 <ListItemText
                   primary="Mostrar más"
-                  sx={{ opacity: open ? 1 : 0 }}
+                  sx={{ opacity: openLeftDrawer ? 1 : 0 }}
                 />
               </ListItemButton>
             </ListItem>
