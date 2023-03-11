@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import NotesList from "../components/notes/NotesList"
 import NotesListHeader from "../components/notes/NotesListHeader"
 import NotesListTabs from "../components/notes/NotesListTabs"
-import useGetNotes, { NoteFilters } from "../queries/notes.query"
+import { useGetNotes, NoteFilters } from "../queries/notes.query"
 
 type MainPageProps = {
   title: string

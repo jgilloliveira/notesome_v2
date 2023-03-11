@@ -1,6 +1,6 @@
 import { Refresh } from "@mui/icons-material"
-import { useQuery } from "@tanstack/react-query"
-import { AxiosError } from "axios"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { AxiosError, AxiosResponse } from "axios"
 import { useEffect } from "react"
 import { useLocation } from "react-router-dom"
 import { PaginatedAxiosResponse } from "../models"
@@ -31,7 +31,7 @@ function getParams(props?: GetNotesProps) {
   }
 }
 
-export default function useGetNotes(props?: GetNotesProps) {
+export function useGetNotes(props?: GetNotesProps) {
   const location = useLocation()
 
   const { isLoading, data, isError, refetch } = useQuery<
@@ -40,15 +40,39 @@ export default function useGetNotes(props?: GetNotesProps) {
   >(["get-notes"], () =>
     connection.get("/notes/", { params: getParams(props) })
   )
-
+  useGetNoteById("3")
   useEffect(() => {
     refetch()
   }, [location])
 
   return {
     isGettingNotes: isLoading,
-    notes: data?.data.results,
+    notes: data?.data.results, // Es results ya que es paginado.
     isNotesError: isError,
     refetchNotes: refetch,
+  }
+}
+
+export function useGetNoteById(id: string) {
+  const queryClient = useQueryClient()
+  const noteList = queryClient.getQueryData<PaginatedAxiosResponse<Note>>([
+    "get-notes",
+  ])
+  const note = noteList?.data.results.find(
+    (element) => element.id.toString() === id
+  )
+  if (note) {
+    return { isGettingNote: false, note, isNoteError: false }
+  }
+
+  const { isLoading, data, isError } = useQuery<
+    AxiosResponse<Note>,
+    AxiosError
+  >(["get-note-by-id"], () => connection.get(`/notes/${id}/`))
+
+  return {
+    isGettingNote: isLoading,
+    note: data?.data,
+    isNoteError: isError,
   }
 }

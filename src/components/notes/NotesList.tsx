@@ -1,7 +1,7 @@
 import { List } from "@mui/material"
 import { Stack } from "@mui/system"
 import { useEffect } from "react"
-import useGetNotes, { GetNotesProps } from "../../queries/notes.query"
+import { useGetNotes, GetNotesProps } from "../../queries/notes.query"
 import NoteItem from "./NoteItem"
 
 type NotesListProps = GetNotesProps

@@ -74,21 +74,22 @@ export default function NoteDrawer() {
           sx={{ width: "100%" }}
         >
           <Stack direction="row" alignItems="flex-start">
-            <IconButton onClick={handleDrawerClose} sx={{ mt: 2.5 }}>
+            <IconButton onClick={handleDrawerClose} sx={{ mt: 2 }}>
               <CloseIcon />
             </IconButton>
+            {/* Note title */}
             <InputBase
               multiline
               placeholder="Escribe aquí el título..."
               inputProps={{ maxLength: 64 }}
-              sx={{ py: 2, px: 1.25, fontSize: 32 }}
+              sx={{ py: 2, px: 1.25, fontSize: 28 }}
             />
           </Stack>
           <Stack
             direction="row"
             spacing={1}
             alignItems="flex-start"
-            sx={{ mt: 2.5 }}
+            sx={{ mt: 2 }}
           >
             <IconButton onClick={handleDrawerClose}>
               <ColorLensIcon />
@@ -103,8 +104,7 @@ export default function NoteDrawer() {
           </Stack>
         </Stack>
       </DrawerHeader>
-      <Divider />
-      {/* Note title */}
+      {/* Note content */}
       <Stack flexGrow={1}>
         <ReactQuill
           theme="snow"

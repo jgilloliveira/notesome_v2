@@ -5,7 +5,7 @@ import NotesList from "../components/notes/NotesList"
 import NotesListHeader from "../components/notes/NotesListHeader"
 import NotesListTabs from "../components/notes/NotesListTabs"
 import { useGetCategoryById } from "../queries/categories.query"
-import useGetNotes, { NoteFilters } from "../queries/notes.query"
+import { useGetNotes, NoteFilters } from "../queries/notes.query"
 import MainPage from "./MainPage"
 
 export default function MainPageByCategory() {
