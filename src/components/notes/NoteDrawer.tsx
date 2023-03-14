@@ -1,20 +1,7 @@
 import { Stack } from "@mui/system"
-import { Note } from "../../models/note.model"
-
-type NoteDrawerProps = {
-  note: Note
-}
-
 import * as React from "react"
 import { styled, useTheme } from "@mui/material/styles"
-import Box from "@mui/material/Box"
 import Drawer from "@mui/material/Drawer"
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar"
-import Toolbar from "@mui/material/Toolbar"
-import CssBaseline from "@mui/material/CssBaseline"
-import List from "@mui/material/List"
-import Typography from "@mui/material/Typography"
-import Divider from "@mui/material/Divider"
 import IconButton from "@mui/material/IconButton"
 import ReactQuill from "react-quill"
 import "react-quill/dist/quill.snow.css"
@@ -25,6 +12,7 @@ import StarBorderIcon from "@mui/icons-material/StarBorder"
 import MoreVertIcon from "@mui/icons-material/MoreVert"
 import { useState } from "react"
 import { useSearchParams } from "react-router-dom"
+import { useGetNoteById } from "../../queries/notes.query"
 
 const drawerWidth = 768
 
@@ -41,7 +29,9 @@ export default function NoteDrawer() {
   const theme = useTheme()
   const [open, setOpen] = React.useState(true)
   const [searchParams, setSearchParams] = useSearchParams()
-  const [noteContent, setNoteContent] = useState("")
+  const { note } = useGetNoteById(searchParams.get("noteId") || "")
+  const [noteTitle, setNoteTitle] = useState(note?.title)
+  const [noteContent, setNoteContent] = useState(note?.content)
 
   const handleDrawerOpen = () => {
     setOpen(true)
@@ -80,6 +70,7 @@ export default function NoteDrawer() {
             {/* Note title */}
             <InputBase
               multiline
+              value={noteTitle}
               placeholder="Escribe aquí el título..."
               inputProps={{ maxLength: 64 }}
               sx={{ py: 2, px: 1.25, fontSize: 28 }}
