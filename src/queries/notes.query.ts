@@ -40,7 +40,7 @@ export function useGetNotes(props?: GetNotesProps) {
   >(["get-notes"], () =>
     connection.get("/notes/", { params: getParams(props) })
   )
-  useGetNoteById("3")
+
   useEffect(() => {
     refetch()
   }, [location])
@@ -61,14 +61,18 @@ export function useGetNoteById(id: string) {
   const note = noteList?.data.results.find(
     (element) => element.id.toString() === id
   )
-  if (note) {
-    return { isGettingNote: false, note, isNoteError: false }
-  }
 
+  // Ver como ejecutar siempre los hooks en un hooks...
   const { isLoading, data, isError } = useQuery<
     AxiosResponse<Note>,
     AxiosError
-  >(["get-note-by-id"], () => connection.get(`/notes/${id}/`))
+  >(["get-note-by-id"], () => connection.get(`/notes/${id}/`), {
+    enabled: Boolean(id) && !note,
+  })
+
+  if (note) {
+    return { isGettingNote: false, note, isNoteError: false }
+  }
 
   return {
     isGettingNote: isLoading,
@@ -76,3 +80,31 @@ export function useGetNoteById(id: string) {
     isNoteError: isError,
   }
 }
+
+// export function useGetServerNoteById(id: string) {
+//   const { data, isError, isLoading } = useQuery<
+//     AxiosResponse<Note>,
+//     AxiosError
+//   >(["get-note-by-id", id], () => connection.get(`/notes/${id}/`))
+//   return {
+//     isGettingNote: isLoading,
+//     note: data?.data,
+//     isNoteError: isError,
+//   }
+// }
+
+// export function useGetNoteById(id: string) {
+//   const queryClient = useQueryClient()
+//   const [_, notesResponse] = queryClient.getQueriesData<
+//     PaginatedAxiosResponse<Note>
+//   >(["get-notes"])[0]
+
+//   console.log(notesResponse)
+//   if (!notesResponse) return useGetServerNoteById(id)
+
+//   return {
+//     note: notesResponse?.data.results.find((element) => element.id === id),
+//     isGettingNote: false,
+//     isNoteError: false,
+//   }
+// }

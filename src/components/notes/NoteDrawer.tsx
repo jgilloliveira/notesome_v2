@@ -10,7 +10,7 @@ import { Button, InputBase, TextField } from "@mui/material"
 import ColorLensIcon from "@mui/icons-material/ColorLens"
 import StarBorderIcon from "@mui/icons-material/StarBorder"
 import MoreVertIcon from "@mui/icons-material/MoreVert"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 import { useGetNoteById } from "../../queries/notes.query"
 
@@ -26,16 +26,24 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }))
 
 export default function NoteDrawer() {
-  const theme = useTheme()
-  const [open, setOpen] = React.useState(true)
   const [searchParams, setSearchParams] = useSearchParams()
   const { note } = useGetNoteById(searchParams.get("noteId") || "")
   const [noteTitle, setNoteTitle] = useState(note?.title)
   const [noteContent, setNoteContent] = useState(note?.content)
 
-  const handleDrawerOpen = () => {
-    setOpen(true)
-  }
+  useEffect(() => {
+    setNoteTitle(note?.title)
+    setNoteContent(note?.content)
+  }, [note])
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      // TODO: Enviar título modificado al servidor.
+      console.log("noteTitle", noteTitle)
+    }, 2000)
+
+    return () => clearTimeout(timeoutId)
+  }, [noteTitle])
 
   const handleDrawerClose = () => {
     searchParams.delete("noteId")
@@ -72,6 +80,7 @@ export default function NoteDrawer() {
               multiline
               value={noteTitle}
               placeholder="Escribe aquí el título..."
+              onChange={(e) => setNoteTitle(e.target.value)}
               inputProps={{ maxLength: 64 }}
               sx={{ py: 2, px: 1.25, fontSize: 28 }}
             />
@@ -88,6 +97,7 @@ export default function NoteDrawer() {
             <IconButton onClick={handleDrawerClose}>
               <StarBorderIcon />
             </IconButton>
+            {/* Botón guardar */}
             <Button variant="contained">Guardar</Button>
             <IconButton onClick={handleDrawerClose}>
               <MoreVertIcon />
