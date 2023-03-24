@@ -12,7 +12,7 @@ import StarBorderIcon from "@mui/icons-material/StarBorder"
 import MoreVertIcon from "@mui/icons-material/MoreVert"
 import { useEffect, useState } from "react"
 import { useSearchParams } from "react-router-dom"
-import { useGetNoteById } from "../../queries/notes.query"
+import { useGetNoteById, useUpdateNoteById } from "../../queries/notes.query"
 
 const drawerWidth = 768
 
@@ -27,23 +27,40 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 export default function NoteDrawer() {
   const [searchParams, setSearchParams] = useSearchParams()
-  const { note } = useGetNoteById(searchParams.get("noteId") || "")
-  const [noteTitle, setNoteTitle] = useState(note?.title)
-  const [noteContent, setNoteContent] = useState(note?.content)
+  const noteId = searchParams.get("noteId") || ""
+  const { note } = useGetNoteById(noteId)
+  const [noteTitle, setNoteTitle] = useState(note?.title || "")
+  const [noteContent, setNoteContent] = useState(note?.content || "")
+  const { updateNote, isUpdatingNote } = useUpdateNoteById(noteId)
+  const [canUpdateTitle, setCanUpdateTitle] = useState(true)
 
   useEffect(() => {
-    setNoteTitle(note?.title)
-    setNoteContent(note?.content)
+    setNoteTitle(note?.title || "")
+    setNoteContent(note?.content || "")
+    setCanUpdateTitle(false)
   }, [note])
 
   useEffect(() => {
+    if (!canUpdateTitle) {
+      setCanUpdateTitle(true)
+      return
+    }
     const timeoutId = setTimeout(() => {
-      // TODO: Enviar título modificado al servidor.
-      console.log("noteTitle", noteTitle)
-    }, 2000)
-
+      if (!isUpdatingNote && note) updateNote({ title: noteTitle })
+    }, 1000)
     return () => clearTimeout(timeoutId)
   }, [noteTitle])
+
+  useEffect(() => {
+    if (!canUpdateTitle) {
+      setCanUpdateTitle(true)
+      return
+    }
+    const timeoutId = setTimeout(() => {
+      if (!isUpdatingNote && note) updateNote({ content: noteContent })
+    }, 1000)
+    return () => clearTimeout(timeoutId)
+  }, [noteContent])
 
   const handleDrawerClose = () => {
     searchParams.delete("noteId")
@@ -97,8 +114,6 @@ export default function NoteDrawer() {
             <IconButton onClick={handleDrawerClose}>
               <StarBorderIcon />
             </IconButton>
-            {/* Botón guardar */}
-            <Button variant="contained">Guardar</Button>
             <IconButton onClick={handleDrawerClose}>
               <MoreVertIcon />
             </IconButton>

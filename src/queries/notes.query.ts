@@ -1,5 +1,5 @@
 import { Refresh } from "@mui/icons-material"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { AxiosError, AxiosResponse } from "axios"
 import { useEffect } from "react"
 import { useLocation } from "react-router-dom"
@@ -37,9 +37,7 @@ export function useGetNotes(props?: GetNotesProps) {
   const { isLoading, data, isError, refetch } = useQuery<
     PaginatedAxiosResponse<Note>,
     AxiosError
-  >(["get-notes"], () =>
-    connection.get("/notes/", { params: getParams(props) })
-  )
+  >(["notes"], () => connection.get("/notes/", { params: getParams(props) }))
 
   useEffect(() => {
     refetch()
@@ -56,7 +54,7 @@ export function useGetNotes(props?: GetNotesProps) {
 export function useGetNoteById(id: string) {
   const queryClient = useQueryClient()
   const noteList = queryClient.getQueryData<PaginatedAxiosResponse<Note>>([
-    "get-notes",
+    "notes",
   ])
   const note = noteList?.data.results.find(
     (element) => element.id.toString() === id
@@ -66,7 +64,7 @@ export function useGetNoteById(id: string) {
   const { isLoading, data, isError } = useQuery<
     AxiosResponse<Note>,
     AxiosError
-  >(["get-note-by-id"], () => connection.get(`/notes/${id}/`), {
+  >(["note", id], () => connection.get(`/notes/${id}/`), {
     enabled: Boolean(id) && !note,
   })
 
@@ -81,30 +79,38 @@ export function useGetNoteById(id: string) {
   }
 }
 
-// export function useGetServerNoteById(id: string) {
-//   const { data, isError, isLoading } = useQuery<
-//     AxiosResponse<Note>,
-//     AxiosError
-//   >(["get-note-by-id", id], () => connection.get(`/notes/${id}/`))
-//   return {
-//     isGettingNote: isLoading,
-//     note: data?.data,
-//     isNoteError: isError,
-//   }
-// }
+export function useUpdateNoteById(id: string) {
+  const queryClient = useQueryClient()
 
-// export function useGetNoteById(id: string) {
-//   const queryClient = useQueryClient()
-//   const [_, notesResponse] = queryClient.getQueriesData<
-//     PaginatedAxiosResponse<Note>
-//   >(["get-notes"])[0]
+  const { mutate, isLoading, isError } = useMutation<
+    AxiosResponse<Note>,
+    AxiosError,
+    Partial<Note>
+  >((note) => connection.patch(`/notes/${id}/`, note), {
+    onSuccess(data) {
+      queryClient.setQueriesData<PaginatedAxiosResponse<Note>>(
+        ["notes"],
+        (oldNotes) => {
+          if (!oldNotes) return oldNotes
+          const results = oldNotes.data.results.map((note) =>
+            note.id.toString() === id ? data.data : note
+          )
+          return {
+            ...oldNotes,
+            data: {
+              ...oldNotes.data,
+              results,
+            },
+          }
+        }
+      )
+      // queryClient.invalidateQueries({ queryKey: ["notes"] })
+    },
+  })
 
-//   console.log(notesResponse)
-//   if (!notesResponse) return useGetServerNoteById(id)
-
-//   return {
-//     note: notesResponse?.data.results.find((element) => element.id === id),
-//     isGettingNote: false,
-//     isNoteError: false,
-//   }
-// }
+  return {
+    updateNote: mutate,
+    isUpdatingNote: isLoading,
+    isUpdateNoteError: isError,
+  }
+}
