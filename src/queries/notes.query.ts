@@ -104,7 +104,6 @@ export function useUpdateNoteById(id: string) {
           }
         }
       )
-      // queryClient.invalidateQueries({ queryKey: ["notes"] })
     },
   })
 

@@ -13,6 +13,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert"
 import { useEffect, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 import { useGetNoteById, useUpdateNoteById } from "../../queries/notes.query"
+import ColorPicker from "../base/ColorPicker"
 
 const drawerWidth = 768
 
@@ -29,22 +30,18 @@ export default function NoteDrawer() {
   const [searchParams, setSearchParams] = useSearchParams()
   const noteId = searchParams.get("noteId") || ""
   const { note } = useGetNoteById(noteId)
-  const [noteTitle, setNoteTitle] = useState(note?.title || "")
-  const [noteContent, setNoteContent] = useState(note?.content || "")
+  const [noteTitle, setNoteTitle] = useState(note?.title || undefined)
+  const [noteContent, setNoteContent] = useState(note?.content || undefined)
+  const [noteColor, setNoteColor] = useState(note?.color || undefined)
   const { updateNote, isUpdatingNote } = useUpdateNoteById(noteId)
-  const [canUpdateTitle, setCanUpdateTitle] = useState(true)
 
   useEffect(() => {
     setNoteTitle(note?.title || "")
     setNoteContent(note?.content || "")
-    setCanUpdateTitle(false)
+    setNoteColor(note?.color || "")
   }, [note])
 
   useEffect(() => {
-    if (!canUpdateTitle) {
-      setCanUpdateTitle(true)
-      return
-    }
     const timeoutId = setTimeout(() => {
       if (!isUpdatingNote && note) updateNote({ title: noteTitle })
     }, 1000)
@@ -52,13 +49,10 @@ export default function NoteDrawer() {
   }, [noteTitle])
 
   useEffect(() => {
-    if (!canUpdateTitle) {
-      setCanUpdateTitle(true)
-      return
-    }
     const timeoutId = setTimeout(() => {
       if (!isUpdatingNote && note) updateNote({ content: noteContent })
     }, 1000)
+
     return () => clearTimeout(timeoutId)
   }, [noteContent])
 
@@ -78,6 +72,7 @@ export default function NoteDrawer() {
           width: drawerWidth,
         },
       }}
+      PaperProps={{ sx: { backgroundColor: noteColor } }}
       variant="persistent"
       anchor="right"
       open={isOpenNoteDrawer}
@@ -108,9 +103,10 @@ export default function NoteDrawer() {
             alignItems="flex-start"
             sx={{ mt: 2 }}
           >
-            <IconButton onClick={handleDrawerClose}>
-              <ColorLensIcon />
-            </IconButton>
+            <ColorPicker
+              color={noteColor || ""}
+              onChange={(color) => setNoteColor(color)}
+            />
             <IconButton onClick={handleDrawerClose}>
               <StarBorderIcon />
             </IconButton>
@@ -126,7 +122,11 @@ export default function NoteDrawer() {
           theme="snow"
           value={noteContent}
           placeholder="Escribe aquí el contenido..."
-          onChange={setNoteContent}
+          onChange={(content, delta, source, editor) => {
+            // console.log("delta:", delta)
+            console.log("content:", content)
+            setNoteContent(content)
+          }}
           style={{
             display: "flex",
             flexDirection: "column",

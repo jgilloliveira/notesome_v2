@@ -4,6 +4,7 @@ import { format } from "date-fns"
 import StarIcon from "@mui/icons-material/Star"
 import { shadeColor } from "../../utils/colors.util"
 import { useNavigate, useSearchParams } from "react-router-dom"
+import parseToHtml from "html-react-parser"
 
 type NoteItemProps = {
   note: Note
@@ -70,9 +71,16 @@ export default function NoteItem({ note }: NoteItemProps) {
       <Typography variant="h6" sx={{ textAlign: "left" }}>
         {note.title}
       </Typography>
-      <Typography variant="body1" sx={{ textAlign: "left" }}>
-        {note.content}
-      </Typography>
+      {/* <Typography variant="body1" sx={{ textAlign: "left" }}> */}
+      <Stack
+        sx={{
+          "& > p": { m: 0 },
+        }}
+      >
+        {parseToHtml(` ${note.content}`)}
+      </Stack>
+
+      {/* </Typography> */}
     </Paper>
   )
 }
