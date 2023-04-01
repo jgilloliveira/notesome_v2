@@ -9,6 +9,7 @@ import CloseIcon from "@mui/icons-material/Close"
 import { Button, InputBase, TextField } from "@mui/material"
 import ColorLensIcon from "@mui/icons-material/ColorLens"
 import StarBorderIcon from "@mui/icons-material/StarBorder"
+import StarIcon from "@mui/icons-material/Star"
 import MoreVertIcon from "@mui/icons-material/MoreVert"
 import { useEffect, useState } from "react"
 import { useSearchParams } from "react-router-dom"
@@ -33,12 +34,14 @@ export default function NoteDrawer() {
   const [noteTitle, setNoteTitle] = useState(note?.title || undefined)
   const [noteContent, setNoteContent] = useState(note?.content || undefined)
   const [noteColor, setNoteColor] = useState(note?.color || undefined)
+  const [isFavorite, setIsFavorite] = useState(note?.isFavorite || false)
   const { updateNote, isUpdatingNote } = useUpdateNoteById(noteId)
 
   useEffect(() => {
     setNoteTitle(note?.title || "")
     setNoteContent(note?.content || "")
     setNoteColor(note?.color || "")
+    setIsFavorite(note?.isFavorite || false)
   }, [note])
 
   useEffect(() => {
@@ -59,6 +62,17 @@ export default function NoteDrawer() {
   const handleDrawerClose = () => {
     searchParams.delete("noteId")
     setSearchParams(searchParams)
+  }
+
+  function handleOnChangeColor(color: string) {
+    setNoteColor(color)
+    updateNote({ color })
+  }
+
+  function handleToggleIsFavorite() {
+    setIsFavorite(!isFavorite)
+    // Estado isFavorite no se actualizó aún, por eso se le pasa de esta forma a la nota.
+    updateNote({ isFavorite: !isFavorite })
   }
 
   const isOpenNoteDrawer = searchParams.get("noteId") !== null
@@ -105,10 +119,14 @@ export default function NoteDrawer() {
           >
             <ColorPicker
               color={noteColor || ""}
-              onChange={(color) => setNoteColor(color)}
+              onChange={handleOnChangeColor}
             />
-            <IconButton onClick={handleDrawerClose}>
-              <StarBorderIcon />
+            <IconButton onClick={handleToggleIsFavorite}>
+              {isFavorite ? (
+                <StarIcon sx={{ color: "gold" }} />
+              ) : (
+                <StarBorderIcon />
+              )}
             </IconButton>
             <IconButton onClick={handleDrawerClose}>
               <MoreVertIcon />
