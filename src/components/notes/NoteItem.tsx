@@ -5,6 +5,7 @@ import StarIcon from "@mui/icons-material/Star"
 import { shadeColor } from "../../utils/colors.util"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import parseToHtml from "html-react-parser"
+import ChipNoteCategoryList from "../categories/ChipNoteCategoryList"
 
 type NoteItemProps = {
   note: Note
@@ -45,27 +46,7 @@ export default function NoteItem({ note }: NoteItemProps) {
         </Typography>
         {note.isFavorite && <StarIcon sx={{ color: "gold", mb: "2px" }} />}
         <Stack direction="row">
-          {note.categories.length > 0 && (
-            <Chip
-              label={note.categories[0].name}
-              sx={{
-                maxWidth: "100px",
-                border: `2px solid ${note.color}`,
-                mr: "-10px",
-                zIndex: 100,
-                bgcolor: shadeColor(note.color, -10),
-              }}
-            />
-          )}
-          {note.categories.length > 1 && (
-            <Chip
-              label={`+${note.categories.length - 1}`}
-              sx={{
-                border: `2px solid ${note.color}`,
-                bgcolor: shadeColor(note.color, -10),
-              }}
-            />
-          )}
+          <ChipNoteCategoryList note={note} maxLen={1} />
         </Stack>
       </Stack>
       <Typography variant="h6" sx={{ textAlign: "left" }}>

@@ -6,15 +6,18 @@ import IconButton from "@mui/material/IconButton"
 import ReactQuill from "react-quill"
 import "react-quill/dist/quill.snow.css"
 import CloseIcon from "@mui/icons-material/Close"
-import { Button, InputBase, TextField } from "@mui/material"
+import { Button, Divider, InputBase, TextField } from "@mui/material"
 import ColorLensIcon from "@mui/icons-material/ColorLens"
 import StarBorderIcon from "@mui/icons-material/StarBorder"
 import StarIcon from "@mui/icons-material/Star"
+import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd"
+import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove"
 import MoreVertIcon from "@mui/icons-material/MoreVert"
 import { useEffect, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 import { useGetNoteById, useUpdateNoteById } from "../../queries/notes.query"
 import ColorPicker from "../base/ColorPicker"
+import ChipNoteCategoryList from "../categories/ChipNoteCategoryList"
 
 const drawerWidth = 768
 
@@ -151,6 +154,13 @@ export default function NoteDrawer() {
             flexGrow: 1,
           }}
         ></ReactQuill>
+      </Stack>
+      <Divider />
+      <Stack direction="row">
+        <IconButton onClick={handleDrawerClose}>
+          <BookmarkAddIcon />
+        </IconButton>
+        {note && <ChipNoteCategoryList note={note} maxLen={3} />}
       </Stack>
     </Drawer>
   )
