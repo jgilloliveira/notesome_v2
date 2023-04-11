@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom"
 import { PaginatedAxiosResponse } from "../models"
 import { Note } from "../models/note.model"
 import { connection } from "./axios.config"
+import { Category } from "../models/category.model"
 
 export type NoteFilters = "isFavorite" | "isArchived" | "isDeleted"
 
@@ -111,5 +112,24 @@ export function useUpdateNoteById(id: string) {
     updateNote: mutate,
     isUpdatingNote: isLoading,
     isUpdateNoteError: isError,
+  }
+}
+
+export function useGetUnassignedCategoriesByNoteId(id?: string) {
+  const { data, isLoading, error, isError, refetch } = useQuery<
+    AxiosResponse<Category[]>,
+    AxiosError
+  >(
+    ["unassigned-categories", id],
+    () => connection.get(`notes/${id}/unassigned_categories/`),
+    { enabled: Boolean(id) }
+  )
+
+  return {
+    categories: data?.data,
+    categoriesError: error?.response?.data,
+    isGettingUnassignedCategoriesByNoteId: isLoading,
+    isGettingUnassignedCategoriesByNoteIdError: isError,
+    refetchUnassignedCategoriesByNoteId: refetch,
   }
 }

@@ -18,6 +18,7 @@ import { useSearchParams } from "react-router-dom"
 import { useGetNoteById, useUpdateNoteById } from "../../queries/notes.query"
 import ColorPicker from "../base/ColorPicker"
 import ChipNoteCategoryList from "../categories/ChipNoteCategoryList"
+import NoteCategoriesSelector from "./NoteCategoriesSelector"
 
 const drawerWidth = 768
 
@@ -39,6 +40,7 @@ export default function NoteDrawer() {
   const [noteColor, setNoteColor] = useState(note?.color || undefined)
   const [isFavorite, setIsFavorite] = useState(note?.isFavorite || false)
   const { updateNote, isUpdatingNote } = useUpdateNoteById(noteId)
+  const [showCategorySelector, setShowCategorySelector] = useState(false)
 
   useEffect(() => {
     setNoteTitle(note?.title || "")
@@ -156,10 +158,18 @@ export default function NoteDrawer() {
         ></ReactQuill>
       </Stack>
       <Divider />
-      <Stack direction="row">
-        <IconButton onClick={handleDrawerClose}>
+      <Stack direction="row" alignItems="center">
+        <IconButton
+          onClick={() => setShowCategorySelector(!showCategorySelector)}
+        >
           <BookmarkAddIcon />
         </IconButton>
+        {showCategorySelector && (
+          <NoteCategoriesSelector
+            note={showCategorySelector ? note : undefined}
+            onClose={() => setShowCategorySelector(false)}
+          />
+        )}
         {note && <ChipNoteCategoryList note={note} maxLen={3} />}
       </Stack>
     </Drawer>

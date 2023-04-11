@@ -46,7 +46,7 @@ export default function NoteItem({ note }: NoteItemProps) {
         </Typography>
         {note.isFavorite && <StarIcon sx={{ color: "gold", mb: "2px" }} />}
         <Stack direction="row">
-          <ChipNoteCategoryList note={note} maxLen={1} />
+          <ChipNoteCategoryList note={note} maxLen={1} overlap dense />
         </Stack>
       </Stack>
       <Typography variant="h6" sx={{ textAlign: "left" }}>

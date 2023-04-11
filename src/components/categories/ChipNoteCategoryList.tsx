@@ -5,6 +5,8 @@ import { shadeColor } from "../../utils/colors.util"
 type ChipNoteCategoryListProps = {
   note: Note
   maxLen?: number
+  overlap?: boolean
+  dense?: boolean
 }
 export default function ChipNoteCategoryList(props: ChipNoteCategoryListProps) {
   const categories = props.note.categories.slice(0, props.maxLen)
@@ -16,9 +18,9 @@ export default function ChipNoteCategoryList(props: ChipNoteCategoryListProps) {
           <Chip
             label={category.name}
             sx={{
-              maxWidth: "100px",
+              maxWidth: props.dense ? "100px" : "auto",
               border: `2px solid ${props.note.color}`,
-              mr: "-10px",
+              mr: props.overlap ? "-10px" : "",
               zIndex: 100,
               bgcolor: shadeColor(props.note.color, -10),
             }}
