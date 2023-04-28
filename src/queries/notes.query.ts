@@ -52,7 +52,7 @@ export function useGetNotes(props?: GetNotesProps) {
   }
 }
 
-export function useGetNoteById(id: string) {
+export function useGetNoteById(id?: string) {
   const queryClient = useQueryClient()
   const noteList = queryClient.getQueryData<PaginatedAxiosResponse<Note>>([
     "notes",
@@ -62,7 +62,7 @@ export function useGetNoteById(id: string) {
   )
 
   // Ver como ejecutar siempre los hooks en un hooks...
-  const { isLoading, data, isError } = useQuery<
+  const { isLoading, data, isError, refetch } = useQuery<
     AxiosResponse<Note>,
     AxiosError
   >(["note", id], () => connection.get(`/notes/${id}/`), {
@@ -77,16 +77,17 @@ export function useGetNoteById(id: string) {
     isGettingNote: isLoading,
     note: data?.data,
     isNoteError: isError,
+    refetchNoteById: refetch,
   }
 }
 
-export function useUpdateNoteById(id: string) {
+export function useUpdateNoteById(id?: string) {
   const queryClient = useQueryClient()
 
-  const { mutate, isLoading, isError } = useMutation<
+  const { mutate, mutateAsync, isLoading, isError } = useMutation<
     AxiosResponse<Note>,
     AxiosError,
-    Partial<Note>
+    Partial<Note & { newCategories: string[] }>
   >((note) => connection.patch(`/notes/${id}/`, note), {
     onSuccess(data) {
       queryClient.setQueriesData<PaginatedAxiosResponse<Note>>(
@@ -109,7 +110,7 @@ export function useUpdateNoteById(id: string) {
   })
 
   return {
-    updateNote: mutate,
+    updateNote: mutateAsync,
     isUpdatingNote: isLoading,
     isUpdateNoteError: isError,
   }
@@ -126,7 +127,7 @@ export function useGetUnassignedCategoriesByNoteId(id?: string) {
   )
 
   return {
-    categories: data?.data,
+    unassignedCategories: data?.data,
     categoriesError: error?.response?.data,
     isGettingUnassignedCategoriesByNoteId: isLoading,
     isGettingUnassignedCategoriesByNoteIdError: isError,

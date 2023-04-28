@@ -166,7 +166,7 @@ export default function NoteDrawer() {
         </IconButton>
         {showCategorySelector && (
           <NoteCategoriesSelector
-            note={showCategorySelector ? note : undefined}
+            noteId={showCategorySelector ? note?.id : undefined}
             onClose={() => setShowCategorySelector(false)}
           />
         )}

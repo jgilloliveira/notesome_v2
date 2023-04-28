@@ -16,6 +16,7 @@ export default function ChipNoteCategoryList(props: ChipNoteCategoryListProps) {
       {categories.length > 0 &&
         categories.map((category) => (
           <Chip
+            key={category.id}
             label={category.name}
             sx={{
               maxWidth: props.dense ? "100px" : "auto",
