@@ -11,7 +11,16 @@ export default function NotesList(props?: NotesListProps) {
 
   return (
     <List sx={{ p: 5 }}>
-      <Stack direction="row" spacing={5}>
+      <Stack
+        direction="row"
+        spacing={5}
+        flexWrap="wrap"
+        sx={{
+          "& > :first-child": {
+            ml: "40px",
+          },
+        }}
+      >
         {notes?.map((note) => (
           <NoteItem key={note.id} note={note} />
         ))}

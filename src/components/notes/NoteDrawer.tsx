@@ -1,5 +1,4 @@
 import { Stack } from "@mui/system"
-import * as React from "react"
 import { styled, useTheme } from "@mui/material/styles"
 import Drawer from "@mui/material/Drawer"
 import IconButton from "@mui/material/IconButton"
@@ -7,18 +6,21 @@ import ReactQuill from "react-quill"
 import "react-quill/dist/quill.snow.css"
 import CloseIcon from "@mui/icons-material/Close"
 import { Button, Divider, InputBase, TextField } from "@mui/material"
-import ColorLensIcon from "@mui/icons-material/ColorLens"
 import StarBorderIcon from "@mui/icons-material/StarBorder"
 import StarIcon from "@mui/icons-material/Star"
 import BookmarkAddIcon from "@mui/icons-material/BookmarkAdd"
-import BookmarkRemoveIcon from "@mui/icons-material/BookmarkRemove"
 import MoreVertIcon from "@mui/icons-material/MoreVert"
 import { useEffect, useState } from "react"
 import { useSearchParams } from "react-router-dom"
-import { useGetNoteById, useUpdateNoteById } from "../../queries/notes.query"
+import {
+  useGetNoteById,
+  useGetNotes,
+  useUpdateNoteById,
+} from "../../queries/notes.query"
 import ColorPicker from "../base/ColorPicker"
 import ChipNoteCategoryList from "../categories/ChipNoteCategoryList"
 import NoteCategoriesSelector from "./NoteCategoriesSelector"
+import { useCreateNote } from "../../queries/notes.query"
 
 const drawerWidth = 768
 
@@ -34,6 +36,10 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 export default function NoteDrawer() {
   const [searchParams, setSearchParams] = useSearchParams()
   const noteId = searchParams.get("noteId") || ""
+  const isNewNote = noteId === "new"
+  const { createNote } = useCreateNote()
+  const { refetchNotes } = useGetNotes()
+  const [isDefinedNote, setIsDefinedNote] = useState(false)
   const { note } = useGetNoteById(noteId)
   const [noteTitle, setNoteTitle] = useState(note?.title || undefined)
   const [noteContent, setNoteContent] = useState(note?.content || undefined)
@@ -42,36 +48,64 @@ export default function NoteDrawer() {
   const { updateNote, isUpdatingNote } = useUpdateNoteById(noteId)
   const [showCategorySelector, setShowCategorySelector] = useState(false)
 
-  useEffect(() => {
-    setNoteTitle(note?.title || "")
-    setNoteContent(note?.content || "")
-    setNoteColor(note?.color || "")
-    setIsFavorite(note?.isFavorite || false)
-  }, [note])
+  function isEmptyNote() {
+    return (
+      noteContent?.replaceAll(" ", "") === "<p><br></p>" &&
+      (noteTitle?.replaceAll(" ", "") || "") === ""
+    )
+  }
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (!isUpdatingNote && note) updateNote({ title: noteTitle })
-    }, 1000)
-    return () => clearTimeout(timeoutId)
+    if (noteId) {
+      setIsDefinedNote(false)
+      setNoteTitle(note?.title || "")
+      setNoteContent(note?.content || "")
+      setNoteColor(note?.color || "")
+      setIsFavorite(note?.isFavorite || false)
+      setIsDefinedNote(true)
+      console.log("1 on update note...")
+      console.log("2 on update note id...", noteId)
+    }
+  }, [noteId])
+
+  useEffect(() => {
+    if (note) {
+      const timeoutId = setTimeout(() => {
+        if (!isUpdatingNote && !isEmptyNote()) updateNote({ title: noteTitle })
+      }, 1000)
+      console.log("3 on update note title...")
+      return () => clearTimeout(timeoutId)
+    }
   }, [noteTitle])
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (!isUpdatingNote && note) updateNote({ content: noteContent })
-    }, 1000)
-
-    return () => clearTimeout(timeoutId)
+    if (note) {
+      const timeoutId = setTimeout(() => {
+        if (!isUpdatingNote && !isEmptyNote())
+          updateNote({ content: noteContent })
+      }, 1000)
+      console.log("4 on update note content...")
+      return () => clearTimeout(timeoutId)
+    }
   }, [noteContent])
 
-  const handleDrawerClose = () => {
+  const handleDrawerClose = async () => {
+    if (isNewNote) {
+      console.log(isNewNote)
+      await createNote({
+        content: noteContent,
+        title: noteTitle,
+        color: noteColor,
+      })
+      refetchNotes()
+    }
     searchParams.delete("noteId")
     setSearchParams(searchParams)
   }
 
   function handleOnChangeColor(color: string) {
     setNoteColor(color)
-    updateNote({ color })
+    if (!isNewNote) updateNote({ color })
   }
 
   function handleToggleIsFavorite() {
@@ -91,7 +125,7 @@ export default function NoteDrawer() {
           width: drawerWidth,
         },
       }}
-      PaperProps={{ sx: { backgroundColor: noteColor } }}
+      PaperProps={{ sx: { backgroundColor: noteColor || "#fbf8cc" } }}
       variant="persistent"
       anchor="right"
       open={isOpenNoteDrawer}
@@ -158,6 +192,7 @@ export default function NoteDrawer() {
         ></ReactQuill>
       </Stack>
       <Divider />
+      {/* Note content */}
       <Stack direction="row" alignItems="center">
         <IconButton
           onClick={() => setShowCategorySelector(!showCategorySelector)}
@@ -166,11 +201,11 @@ export default function NoteDrawer() {
         </IconButton>
         {showCategorySelector && (
           <NoteCategoriesSelector
-            noteId={showCategorySelector ? note?.id : undefined}
+            noteId={showCategorySelector ? noteId : undefined}
             onClose={() => setShowCategorySelector(false)}
           />
         )}
-        {note && <ChipNoteCategoryList note={note} maxLen={3} />}
+        {note && <ChipNoteCategoryList noteId={noteId} maxLen={3} />}
       </Stack>
     </Drawer>
   )

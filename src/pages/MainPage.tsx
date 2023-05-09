@@ -1,4 +1,4 @@
-import { Divider, Stack, Typography } from "@mui/material"
+import { Divider, IconButton, Stack, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 import NotesList from "../components/notes/NotesList"
 import NotesListHeader from "../components/notes/NotesListHeader"
@@ -26,6 +26,7 @@ export default function MainPage({ title, filter }: MainPageProps) {
       <NotesListHeader
         title={title}
         onChangeSearchBar={(text) => setSearchNoteText(text)}
+        filter={filter}
       />
       <Divider />
       <NotesList filter={filter} searchText={searchNoteText} />

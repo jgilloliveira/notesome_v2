@@ -57,7 +57,7 @@ export function useGetNoteById(id?: string) {
   const noteList = queryClient.getQueryData<PaginatedAxiosResponse<Note>>([
     "notes",
   ])
-  const note = noteList?.data.results.find(
+  const localNote = noteList?.data.results.find(
     (element) => element.id.toString() === id
   )
 
@@ -65,12 +65,17 @@ export function useGetNoteById(id?: string) {
   const { isLoading, data, isError, refetch } = useQuery<
     AxiosResponse<Note>,
     AxiosError
-  >(["note", id], () => connection.get(`/notes/${id}/`), {
-    enabled: Boolean(id) && !note,
+  >(["note", id?.toString()], () => connection.get(`/notes/${id}/`), {
+    enabled: Boolean(id) && !localNote && id !== "new",
   })
 
-  if (note) {
-    return { isGettingNote: false, note, isNoteError: false }
+  if (localNote && id !== "new") {
+    return {
+      isGettingNote: false,
+      note: localNote,
+      isNoteError: false,
+      refetchNoteById: refetch,
+    }
   }
 
   return {
@@ -132,5 +137,19 @@ export function useGetUnassignedCategoriesByNoteId(id?: string) {
     isGettingUnassignedCategoriesByNoteId: isLoading,
     isGettingUnassignedCategoriesByNoteIdError: isError,
     refetchUnassignedCategoriesByNoteId: refetch,
+  }
+}
+
+export function useCreateNote() {
+  const { mutateAsync, isError, isLoading } = useMutation<
+    AxiosResponse<Note>,
+    AxiosError,
+    Partial<Note>
+  >((note) => connection.post(`/notes/`, note))
+
+  return {
+    createNote: mutateAsync,
+    isCreateNoteError: isError,
+    isCreatingNote: isLoading,
   }
 }

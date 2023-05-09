@@ -23,7 +23,6 @@ export default function NoteItem({ note }: NoteItemProps) {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
   function handleNoteOnClick() {
-    console.log("Onclick paper")
     searchParams.set("noteId", note.id)
     setSearchParams(searchParams)
   }
@@ -38,6 +37,7 @@ export default function NoteItem({ note }: NoteItemProps) {
         borderRadius: "20px",
         overflow: "hidden",
         bgcolor: note.color,
+        mb: "40px",
       }}
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -46,7 +46,7 @@ export default function NoteItem({ note }: NoteItemProps) {
         </Typography>
         {note.isFavorite && <StarIcon sx={{ color: "gold", mb: "2px" }} />}
         <Stack direction="row">
-          <ChipNoteCategoryList note={note} maxLen={1} overlap dense />
+          <ChipNoteCategoryList noteId={note.id} maxLen={1} overlap dense />
         </Stack>
       </Stack>
       <Typography variant="h6" sx={{ textAlign: "left" }}>

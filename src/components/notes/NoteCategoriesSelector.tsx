@@ -32,7 +32,14 @@ export default function NoteCategoriesSelector(
     useGetUnassignedCategoriesByNoteId(props.noteId)
 
   const categories = useCallback(
-    () => [...(note?.categories || []), ...(unassignedCategories || [])],
+    () =>
+      [...(note?.categories || []), ...(unassignedCategories || [])].reduce(
+        (previousResult, currentCategory) =>
+          previousResult.some((element) => element.id === currentCategory.id)
+            ? previousResult
+            : [...previousResult, currentCategory],
+        [] as unknown as Category[]
+      ),
     [unassignedCategories, note]
   )
   // const [categories, setCategories] = useState([
@@ -63,10 +70,9 @@ export default function NoteCategoriesSelector(
       )
     else newAssignedCategoriesId = [...newAssignedCategoriesId, category.id]
     // setAssignedCategoriesId(newAssignedCategoriesId)
-    // TODO: Arreglar bug cuando se agrega o se quita categorias, no impacta bien en el componente.
     await updateNote({ newCategories: newAssignedCategoriesId })
-    if (refetchNoteById) await refetchNoteById()
-    refetchUnassignedCategoriesByNoteId()
+    await refetchUnassignedCategoriesByNoteId()
+    await refetchNoteById()
   }
 
   return (
